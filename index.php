@@ -39,7 +39,23 @@
         ],
 
     ];
-
+    $vote = isset($_POST['vote']) ? $_POST['vote'] : 0;
+    
+    var_dump($vote);
+    if(!isset($_POST['parking'])){
+      foreach($hotels as $hotel){
+        if($hotel['vote'] >= $vote){
+          $filtered_hotels[] = $hotel;
+        }
+      }
+    }else{
+      foreach($hotels as $hotel){
+        if($hotel['parking'] && $hotel['vote'] >= $vote){
+          $filtered_hotels[] = $hotel;
+        }
+      }
+    }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,9 +68,24 @@
 </head>
 <body>
   <div class="container">
+    <div class="d-flex">
+      <form action="index.php" method="POST">
+        <input class="form-check-input" type="checkbox" value="" id="parking" name="parking">
+        <label class="form-check-label" for="parking">
+          Solo con Parcheggio
+        </label>
+      </div>
+      <div>
+      <?php for($i = 0; $i <= 5; $i++): ?>
+              <input class="form-check-input" type="radio" name="vote" id="vote<?php echo $i ?>" value="<?php echo $i ?>">
+              <label class="form-check-label me-3" for="vote<?php echo $i ?>"> <?php echo $i ?> </label>
+            <?php endfor; ?>
+        <button class="btn btn-primary" type="submit">Invio</button>
+      </form>
+       
     <div class="d-flex flex-wrap ">
       <?php
-      foreach ($hotels as $hotel):
+      foreach ($filtered_hotels as $hotel):
       ?>
       <div class="card m-3" style="width: 25rem;">
         <ul class="list-group list-group-flush">
